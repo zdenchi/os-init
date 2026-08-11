@@ -113,17 +113,17 @@ echo "deb [signed-by=/etc/apt/keyrings/antigravity-repo-key.gpg] https://us-cent
 | sudo tee /etc/apt/sources.list.d/antigravity.list >/dev/null
 
 ###############################################################################
-# Обновление
+# Update apt
 ###############################################################################
 
 echo "==> apt update"
 sudo apt update
 
 ###############################################################################
-# Установка
+# Installation
 ###############################################################################
 
-echo "==> Установка программ"
+echo "==> Installation of programs"
 
 sudo apt install -y \
     google-chrome-stable \
@@ -146,8 +146,8 @@ echo "==> Telegram"
 if apt-cache show telegram-desktop >/dev/null 2>&1; then
     sudo apt install -y telegram-desktop
 else
-    echo "Пакет отсутствует в репозиториях."
-    echo "Установка через Flatpak."
+    echo "Package is not in the repositories."
+    echo "Installation through Flatpak."
 
     sudo apt install -y flatpak
 
@@ -175,7 +175,7 @@ URL=$(curl -fsSL https://api.github.com/repos/Kong/insomnia/releases/latest \
     | head -n1)
 
 if [[ -z "$URL" || "$URL" == "null" ]]; then
-    echo "Не удалось найти актуальный .deb пакет Insomnia."
+    echo "Unable to find the latest .deb package Insomnia."
     exit 1
 fi
 
@@ -187,12 +187,12 @@ sudo apt install -y ./insomnia.deb
 # Terminator
 ###############################################################################
 
-echo "==> Installing Terminator..."
+echo "==> Terminator"
 
 sudo apt update
 sudo apt install -y terminator fonts-firacode
 
-echo "==> Installing JetBrainsMono Nerd Font..."
+echo "==> JetBrainsMono Nerd Font"
 mkdir -p ~/.local/share/fonts
 TMP_DIR=$(mktemp -d)
 
@@ -206,7 +206,7 @@ find "$TMP_DIR/fonts" -name "*.ttf" -exec cp {} ~/.local/share/fonts/ \;
 fc-cache -fv >/dev/null
 rm -rf "$TMP_DIR"
 
-echo "==> Configuring Terminator..."
+echo "==> Configuring Terminator"
 mkdir -p ~/.config/terminator
 
 curl https://raw.githubusercontent.com/dracula/terminator/master/terminator/dracula.py \
@@ -300,41 +300,76 @@ echo "==> tmux"
 sudo apt install -y tmux
 
 cat > ~/.tmux.conf <<'EOF'
-# Использовать мышь
+# Use mouse
 set -g mouse on
 
-# История терминала
+# Terminal history
 set -g history-limit 100000
 
-# Индексация окон и панелей с 1
+# Indexing windows and panels with 1
 set -g base-index 1
 setw -g pane-base-index 1
 
-# Автоматическая перенумерация окон
+# Automatic window renumbering
 set -g renumber-windows on
 
-# Быстрое разделение окон
+# Fast window splitting
 bind | split-window -h
 bind - split-window -v
 unbind '"'
 unbind %
 
-# Перезагрузка конфига
+# Reload config
 bind r source-file ~/.tmux.conf \; display-message "tmux.conf reloaded"
 EOF
 
-# Если tmux уже запущен — перечитать конфигурацию
+# If tmux is already running — reload the configuration
 if command -v tmux >/dev/null && tmux info >/dev/null 2>&1; then
     tmux source-file ~/.tmux.conf
 fi
 
 ###############################################################################
+# Node.js
+###############################################################################
+
+echo "==> Node.js"
+
+# Download and install fnm:
+curl -o- https://fnm.vercel.app/install | bash
+
+source ~/.zshrc
+
+# Download and install Node.js:
+fnm install 24
+
+# Verify the Node.js version:
+node -v # Should print "v24.19.0".
+
+# Download and install pnpm:
+corepack enable pnpm
+
+# Verify pnpm version:
+pnpm -v
+
+
+###############################################################################
+# Bun
+###############################################################################
+
+echo "==> Bun"
+
+curl -fsSL https://bun.sh/install | bash
+
+source ~/.zshrc
+
+bun --version
+
+###############################################################################
 echo
 echo "======================================="
-echo "Установка завершена."
+echo "Installation completed."
 echo "======================================="
 echo
 ###############################################################################
-
 
 
