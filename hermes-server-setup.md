@@ -1,12 +1,14 @@
 # Configuring the Server for Hermes Agent
 
-## 1. Update the system
+## Configurate server
+
+### 1. Update the system
 
 ```bash
 sudo apt update && sudo apt upgrade -y
 ```
 
-## 2. Install the necessary packages
+### 2. Install the necessary packages
 
 ```bash
 sudo apt install -y \
@@ -21,7 +23,7 @@ sudo apt install -y \
   rsync
 ```
 
-## 3. Create a separate user
+### 3. Create a separate user
 
 Replace `my_username` with the desired username.
 
@@ -30,9 +32,9 @@ sudo adduser my_username
 sudo usermod -aG sudo my_username
 ```
 
-## 4. Скопіювати SSH-ключі
+### 4. Copy SSH keys
 
-Виконати від `root`:
+Execute as `root`:
 
 ```bash
 sudo rsync -a --chown=my_username:my_username /root/.ssh/ /home/my_username/.ssh/
@@ -40,7 +42,7 @@ sudo chmod 700 /home/my_username/.ssh
 sudo chmod 600 /home/my_username/.ssh/*
 ```
 
-## 5. Create an alias for quick login via SSH
+### 5. Create an alias for quick login via SSH
 
 ```~/.ssh/config
 Host hermes_vps
@@ -50,7 +52,7 @@ Host hermes_vps
     IdentityFile ~/.ssh/id_ed25519
 ```
 
-## 6. Prevent SSH login under root and password
+### 6. Prevent SSH login under root and password
 
 Create a config:
 
@@ -79,7 +81,7 @@ Reload SSH:
 sudo systemctl reload ssh
 ```
 
-## 7. Configure UFW
+### 7. Configure UFW
 
 ```bash
 sudo ufw default deny incoming
@@ -88,9 +90,26 @@ sudo ufw allow OpenSSH
 sudo ufw enable
 ```
 
-## 8. Install Hermes Agent
+## Install and configure Hermes Agent
+
+### 1. Install Hermes Agent
 
 ```bash
 curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 source ~/.bashrc
 ```
+
+### 2. Install Hermes gateway
+
+```bash
+hermes gateway install
+hermes gateway start
+```
+
+### 3. Configure Hermes model
+
+```bash
+hermes model
+```
+
+Select `OpenAI` >> `ChatGPT or Codex Subscription` and follow the instructions.
