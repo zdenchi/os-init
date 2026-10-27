@@ -102,8 +102,8 @@ source ~/.bashrc
 ### 2. Install Hermes gateway
 
 ```bash
-hermes gateway install
-hermes gateway start
+hermes gateway start              # Start the service
+hermes gateway status             # Check status
 ```
 
 ### 3. Configure Hermes model
