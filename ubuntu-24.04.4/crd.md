@@ -1,10 +1,10 @@
 # Chrome Remote Desktop
 
-## Download and install CRD 
+## Download and install CRD
 
 ```bash
-wget -O ~/Downloads/app.deb "https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb"
-sudo apt install ~/Downloads/app.deb
+wget -O ~/Downloads/chrome-remote-desktop_current_amd64.deb "https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb"
+sudo apt install ~/Downloads/chrome-remote-desktop_current_amd64.deb
 ```
 
 ## Setup headless
@@ -23,7 +23,7 @@ sudo cp \
 
 ## Edit config file
 
-Get the display number 
+Get the display number
 
 ```bash
 echo "DISPLAY=$DISPLAY"
@@ -41,7 +41,7 @@ Replace `FIRST_X_DISPLAY_NUMBER` to the display number
 FIRST_X_DISPLAY_NUMBER = 1
 ```
 
-Change `get_unused_display_number` 
+Change `get_unused_display_number`
 
 ```python
 @staticmethod
@@ -65,38 +65,4 @@ def launch_session(self, *args, **kwargs):
 
 ```bash
 /opt/google/chrome-remote-desktop/chrome-remote-desktop --start
-```
-
-## Enable auto start
-
-Create user-service
-
-```bash
-mkdir -p ~/.config/systemd/user
-nano ~/.config/systemd/user/crd-session.service
-```
-
-```ini
-[Unit]
-Description=Chrome Remote Desktop
-After=graphical-session.target
-Wants=graphical-session.target
-
-[Service]
-Type=oneshot
-RemainAfterExit=yes
-ExecStart=/opt/google/chrome-remote-desktop/chrome-remote-desktop --start
-ExecStop=/opt/google/chrome-remote-desktop/chrome-remote-desktop --stop
-Environment=DISPLAY=:1
-
-[Install]
-WantedBy=graphical-session.target
-```
-
-Enable and start the service
-
-```bash
-systemctl --user daemon-reload
-systemctl --user enable crd-session.service
-systemctl --user start crd-session.service
 ```
